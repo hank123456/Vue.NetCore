@@ -47,7 +47,10 @@ let viewgird = [
   {
     path: '/Sys_WorkFlow',
     name: 'Sys_WorkFlow',
-    component: () => import('@/views/sys/flow/Sys_WorkFlow.vue')
+    component: () => import('@/views/sys/flow/Sys_WorkFlow.vue')//,
+    // meta:{
+    //   keepAlive:false
+    // }
   },
   {
     path: '/Sys_WorkFlowStep',

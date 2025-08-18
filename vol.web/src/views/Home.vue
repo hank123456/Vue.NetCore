@@ -8,7 +8,7 @@
               style="margin-bottom: 10px"
               class="alert-primary"
               :closable="false"
-              title="框架前端及文档重构版本发布,兼容原有版本代码及jsx写法,放开自定义扩展组件限制,新版可任意选择vue2/3/typescript语法开发方式"
+              title="目前所有home也显示均为模拟数据"
             ></el-alert>
           </div>
           <div class="home-list">

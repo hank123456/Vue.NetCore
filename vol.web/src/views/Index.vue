@@ -8,7 +8,7 @@
     <div class="vol-aside" :style="{ width: (isCollapse ? 63 : 200) + 'px' }">
       <div class="header">
         <div class="vol-aside-project-name">
-          .Net8 Vol开发框架
+          YFZX
         </div>
         <!-- 这里可以改为logo显示 -->
         <!-- <img  src="@/assets/imgs/logo.png" /> -->
@@ -29,7 +29,19 @@
     <div class="vol-container">
       <div class="vol-header">
         <!-- 这里可以放项目名称 -->
-        <!-- <div class="project-name">xx管理平台</div> -->
+        <div class="project-name">
+          <!-- 添加侧边栏控制按钮 -->
+          <el-button 
+            link
+            @click="toggleLeft" 
+            class="sidebar-toggle-btn"
+          >
+            <el-icon>
+              <Expand v-if="isCollapse" />
+              <Fold v-else />
+            </el-icon>
+          </el-button>
+          技术研发数字化管理平台</div>
         <div class="header-text">
          
           <div class="h-link" v-if="layout == 'top'">
@@ -208,28 +220,10 @@ const { navCloseTabs, open, close, selectNav, removeNav,navRefreshPage } = Index
 
 navigation.push({ orderNo: '0', id: '1', name: '首页', path: '/home' })
 links.value.push(...[{
-  text: 'App移动端',
-  path: 'http://app.volcore.xyz/',
-  id: -1,
-  icon: 'el-icon-mobile',
-  left: true
-},{
-  text: '框架文档',
-  path: 'http://v3.volcore.xyz/',
-  id: -1,
-  icon: 'el-icon-folder-opened',
-  left: true
-},{
-  text: '企业版本',
-  path: 'http://pro.volcore.xyz/',
+  text: '物资管理系统',
+  path: 'http://10.140.0.0/',
   id: -1,
   icon: 'el-icon-coin',
-  left: true
-},{
-  text: '框架视频',
-  path: 'https://www.cctalk.com/m/group/90268531',
-  id: -1,
-  icon: 'el-icon-video-camera',
   left: true
 }])
 
@@ -382,6 +376,7 @@ onUnmounted(() => {
 })
 </script>
 <style>
+
 .horizontal-collapse-transition {
   transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
 }

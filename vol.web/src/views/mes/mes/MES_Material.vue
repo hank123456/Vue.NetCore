@@ -39,6 +39,7 @@
   </div>
 </template>
 <script setup lang="jsx">
+import { ElTooltip } from 'element-plus'
 import QrcodeVue from 'qrcode.vue'
 import MaterialTree from './MES_Material/MES_MaterialTree.vue'
 import extend from '@/extension/mes/mes/MES_Material.jsx'
@@ -77,10 +78,34 @@ const onInit = async ($vm) => {
     },
     render: (h, { row, column, index }) => {
       return (
-        <div style="padding-top:4px">
-          {' '}
-          <QrcodeVue value={row.CatalogCode} size={40} />
-        </div>
+        // <div style="padding-top:4px">
+        //   {' '}
+        //   <QrcodeVue value={row.CatalogCode} size={40} />
+        // </div>
+        // <div style="padding-top:4px">
+        //   {' '}
+        //   <QrcodeVue value={row.MaterialCode} size={40} />
+        // </div>
+        <ElTooltip
+          placement="right"
+          effect="light"
+          rawContent={true}
+          v-slots={{
+            content: () => (
+              <div style="text-align:center;padding:10px">
+                <div style="margin-bottom:8px;font-weight:bold;color:#333">
+                  物料编码: {row.MaterialCode}
+                </div>
+                <QrcodeVue value={row.MaterialCode} size={250} />
+              </div>
+            ),
+            default: () => (
+              <div style="padding-top:4px;cursor:pointer">
+                <QrcodeVue value={row.MaterialCode} size={40} />
+              </div>
+            )
+          }}
+        />
       )
     }
   })
