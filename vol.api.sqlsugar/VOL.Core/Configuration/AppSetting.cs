@@ -50,6 +50,11 @@ namespace VOL.Core.Configuration
         /// </summary>
         public static Kafka Kafka { get; set; }
 
+        /// <summary>
+        /// 文件存储配置
+        /// </summary>
+        public static FileStorage FileStorage { get; set; }
+
 
         /// <summary>
         /// JWT有效期(分钟=默认120)
@@ -72,6 +77,7 @@ namespace VOL.Core.Configuration
             services.Configure<ModifyMember>(configuration.GetSection("ModifyMember"));
             services.Configure<GlobalFilter>(configuration.GetSection("GlobalFilter"));
             services.Configure<Kafka>(configuration.GetSection("Kafka"));
+            services.Configure<FileStorage>(configuration.GetSection("FileStorage"));
 
             var provider = services.BuildServiceProvider();
             IWebHostEnvironment environment = provider.GetRequiredService<IWebHostEnvironment>();
@@ -184,5 +190,34 @@ namespace VOL.Core.Configuration
     public class Topics
     {
         public string TestTopic { get; set; }
+    }
+
+    /// <summary>
+    /// 文件存储配置
+    /// </summary>
+    public class FileStorage
+    {
+        /// <summary>
+        /// 存储类型：Local 或 Minio
+        /// </summary>
+        public string Type { get; set; } = "Local";
+        public LocalStorage Local { get; set; } = new LocalStorage();
+        public MinioStorage Minio { get; set; } = new MinioStorage();
+    }
+
+    public class LocalStorage
+    {
+        public string UploadPath { get; set; } = "Upload";
+        public string VirtualPath { get; set; } = "/Upload";
+    }
+
+    public class MinioStorage
+    {
+        public string Endpoint { get; set; }
+        public string AccessKey { get; set; }
+        public string SecretKey { get; set; }
+        public string BucketName { get; set; }
+        public bool Secure { get; set; } = false;
+        public string Region { get; set; } = "us-east-1";
     }
 }

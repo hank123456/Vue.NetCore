@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +18,12 @@ using Newtonsoft.Json;
 using Quartz;
 using Quartz.Impl;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using VOL.Core.Configuration;
 using VOL.Core.DBManager;
 using VOL.Core.Extensions;
@@ -31,6 +31,7 @@ using VOL.Core.Filters;
 using VOL.Core.Middleware;
 using VOL.Core.ObjectActionValidator;
 using VOL.Core.Quartz;
+using VOL.Core.Services;
 using VOL.Core.Utilities.PDFHelper;
 using VOL.Core.WorkFlow;
 using VOL.Entity.DomainModels;
@@ -176,6 +177,9 @@ namespace VOL.WebApi
             Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             Services.AddSingleton<Quartz.Spi.IJobFactory, IOCJobFactory>();
 
+            // 注册文件存储服务
+            RegisterFileStorageServices(services);
+            
             //设置文件上传大小限制
             //设置文件上传大小限制
             services.Configure<FormOptions>(x =>
@@ -194,6 +198,25 @@ namespace VOL.WebApi
             AppSetting.Init(services, Configuration);
             services.UseSqlSugar();
         }
+
+        /// <summary>
+        /// 注册文件存储服务
+        /// </summary>
+        /// <param name="services"></param>
+        private void RegisterFileStorageServices(IServiceCollection services)
+        {
+            var fileStorageType = Configuration.GetSection("FileStorage:Type").Value ?? "Local";
+
+            if (fileStorageType.Equals("Minio", StringComparison.OrdinalIgnoreCase))
+            {
+                services.AddScoped<IFileStorageService, MinioFileStorageService>();
+            }
+            else
+            {
+                services.AddScoped<IFileStorageService, LocalFileStorageService>();
+            }
+        }
+
         public void ConfigureContainer(ContainerBuilder builder)
         {
             Services.AddModule(builder, Configuration);
@@ -228,7 +251,7 @@ namespace VOL.WebApi
             });
             app.Use(HttpRequestMiddleware.Context);
 
-            //2021.06.27增加创建默认upload文件夹
+            //增加创建默认upload文件夹
             string _uploadPath = (env.ContentRootPath + "/Upload").ReplacePath();
 
             if (!Directory.Exists(_uploadPath))
