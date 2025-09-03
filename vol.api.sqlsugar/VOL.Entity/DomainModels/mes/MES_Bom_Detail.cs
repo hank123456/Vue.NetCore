@@ -18,166 +18,148 @@ namespace VOL.Entity.DomainModels
     public partial class MES_Bom_Detail:BaseEntity
     {
         /// <summary>
-       ///ID
-       /// </summary>
-       [SugarColumn(IsPrimaryKey = true)]
-       [Key]
-       [Display(Name ="ID")]
-       [MaxLength(36)]
-       [Column(TypeName="uniqueidentifier")]
-       [Editable(true)]
-       [Required(AllowEmptyStrings=false)]
-       public Guid DomDetailId { get; set; }
-
-       /// <summary>
-       ///BomId
-       /// </summary>
-       [Display(Name ="BomId")]
-       [MaxLength(36)]
-       [Column(TypeName="uniqueidentifier")]
-       [Editable(true)]
-       public Guid? BomId { get; set; }
-
-       /// <summary>
-       ///序号
-       /// </summary>
-       [Display(Name ="序号")]
-       [Column(TypeName="int")]
-       [Editable(true)]
-       [Required(AllowEmptyStrings=false)]
-       public int Sequence { get; set; }
-
-       /// <summary>
-       ///子件物料编码
-       /// </summary>
-       [Display(Name ="子件物料编码")]
-       [MaxLength(200)]
-       [Column(TypeName="nvarchar(200)")]
-       [Editable(true)]
-       public string MaterialCode { get; set; }
-
-       /// <summary>
-       ///子件物料名称
-       /// </summary>
-       [Display(Name ="子件物料名称")]
-       [MaxLength(300)]
-       [Column(TypeName="nvarchar(300)")]
-       [Editable(true)]
-       public string MaterialName { get; set; }
-
-       /// <summary>
-       ///规格型号
-       /// </summary>
-       [Display(Name ="规格型号")]
-       [MaxLength(200)]
-       [Column(TypeName="nvarchar(200)")]
-       [Editable(true)]
-       public string Spec { get; set; }
-
-       /// <summary>
        ///单台用量
        /// </summary>
        [Display(Name ="单台用量")]
-       [DisplayFormat(DataFormatString="24,3")]
        [Column(TypeName="decimal")]
        [Editable(true)]
        [Required(AllowEmptyStrings=false)]
        public decimal UsageQty { get; set; }
 
        /// <summary>
-       ///消耗方式
+       ///
        /// </summary>
-       [Display(Name ="消耗方式")]
-       [MaxLength(100)]
-       [Column(TypeName="nvarchar(100)")]
-       [Editable(true)]
+       [SugarColumn(IsPrimaryKey = true)]
+       [Key]
+       [Display(Name ="DomDetailId")]
+       [MaxLength(1024)]
+       [Column(TypeName="string(1024)")]
        [Required(AllowEmptyStrings=false)]
+       public string DomDetailId { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="BomId")]
+       [MaxLength(1024)]
+       [Column(TypeName="string(1024)")]
+       public string BomId { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="Sequence")]
+       [Column(TypeName="int")]
+       [Required(AllowEmptyStrings=false)]
+       public int Sequence { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="MaterialCode")]
+       [MaxLength(200)]
+       [Column(TypeName="string(200)")]
+       public string MaterialCode { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="MaterialName")]
+       [MaxLength(1024)]
+       [Column(TypeName="string(1024)")]
+       public string MaterialName { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="Spec")]
+       [MaxLength(200)]
+       [Column(TypeName="string(200)")]
+       public string Spec { get; set; }
+
+       /// <summary>
+       ///
+       /// </summary>
+       [Display(Name ="ConsumeModel")]
+       [MaxLength(100)]
+       [Column(TypeName="string(100)")]
        public string ConsumeModel { get; set; }
 
        /// <summary>
-       ///投料仓库
+       ///
        /// </summary>
-       [Display(Name ="投料仓库")]
+       [Display(Name ="Warehouse")]
        [MaxLength(100)]
-       [Column(TypeName="nvarchar(100)")]
-       [Editable(true)]
+       [Column(TypeName="string(100)")]
        public string Warehouse { get; set; }
 
        /// <summary>
-       ///供应商
+       ///
        /// </summary>
-       [Display(Name ="供应商")]
+       [Display(Name ="SupplierCode")]
        [MaxLength(50)]
-       [Column(TypeName="nvarchar(50)")]
-       [Editable(true)]
+       [Column(TypeName="string(50)")]
        public string SupplierCode { get; set; }
 
        /// <summary>
-       ///齐套比例
+       ///
        /// </summary>
-       [Display(Name ="齐套比例")]
-       [DisplayFormat(DataFormatString="24,3")]
+       [Display(Name ="KitScale")]
        [Column(TypeName="decimal")]
-       [Editable(true)]
        public decimal? KitScale { get; set; }
 
        /// <summary>
-       ///启用状态
+       ///
        /// </summary>
-       [Display(Name ="启用状态")]
+       [Display(Name ="Enable")]
        [Column(TypeName="int")]
-       [Editable(true)]
        public int? Enable { get; set; }
 
        /// <summary>
-       ///创建人
+       ///
        /// </summary>
-       [Display(Name ="创建人")]
+       [Display(Name ="CreateID")]
        [Column(TypeName="int")]
-       [Editable(true)]
        public int? CreateID { get; set; }
 
        /// <summary>
-       ///创建人
+       ///
        /// </summary>
-       [Display(Name ="创建人")]
+       [Display(Name ="Creator")]
        [MaxLength(50)]
-       [Column(TypeName="nvarchar(50)")]
-       [Editable(true)]
+       [Column(TypeName="string(50)")]
        public string Creator { get; set; }
 
        /// <summary>
-       ///创建时间
+       ///
        /// </summary>
-       [Display(Name ="创建时间")]
-       [Column(TypeName="datetime")]
-       [Editable(true)]
-       public DateTime? CreateDate { get; set; }
+       [Display(Name ="CreateDate")]
+       [MaxLength(1024)]
+       [Column(TypeName="string (1024)")]
+       public string CreateDate { get; set; }
 
        /// <summary>
-       ///更新人
+       ///
        /// </summary>
-       [Display(Name ="更新人")]
+       [Display(Name ="ModifyID")]
        [Column(TypeName="int")]
-       [Editable(true)]
        public int? ModifyID { get; set; }
 
        /// <summary>
-       ///更新人名称
+       ///
        /// </summary>
-       [Display(Name ="更新人名称")]
+       [Display(Name ="Modifier")]
        [MaxLength(50)]
-       [Column(TypeName="nvarchar(50)")]
-       [Editable(true)]
+       [Column(TypeName="string(50)")]
        public string Modifier { get; set; }
 
        /// <summary>
-       ///更新时间
+       ///
        /// </summary>
-       [Display(Name ="更新时间")]
-       [Column(TypeName="datetime")]
-       [Editable(true)]
-       public DateTime? ModifyDate { get; set; }
+       [Display(Name ="ModifyDate")]
+       [MaxLength(1024)]
+       [Column(TypeName="string (1024)")]
+       public string ModifyDate { get; set; }
 
        
     }

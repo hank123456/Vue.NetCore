@@ -220,6 +220,18 @@ let viewgird = [
         path: '/TestService',
         name: 'TestService',
         component: () => import('@/views/mes/mes/TestService.vue')
+    }    ,{
+        path: '/DMS_DocumentDetail',
+        name: 'DMS_DocumentDetail',
+        component: () => import('@/views/dms/dms/DMS_DocumentDetail.vue')
+    }    ,{
+        path: '/DMS_Document',
+        name: 'DMS_Document',
+        component: () => import('@/views/dms/dms/DMS_Document.vue')
+    }    ,{
+        path: '/DMS_FileStorage',
+        name: 'DMS_FileStorage',
+        component: () => import('@/views/dms/dms/DMS_FileStorage.vue')
     }]
 
 //上面的demo、MES开头的都是示例菜单，可以任意删除 

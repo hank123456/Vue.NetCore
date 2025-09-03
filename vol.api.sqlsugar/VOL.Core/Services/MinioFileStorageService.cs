@@ -3,7 +3,10 @@ using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using VOL.Core.Configuration;
 using VOL.Core.Utilities;
@@ -18,6 +21,8 @@ namespace VOL.Core.Services
     {
         private readonly IMinioClient _minioClient;
         private readonly MinioStorage _minioConfig;
+
+
 
         public MinioFileStorageService(IOptions<FileStorage> fileStorageOptions)
         {
@@ -78,6 +83,94 @@ namespace VOL.Core.Services
             }
         }
 
+        /// <summary>
+        /// 批量上传文件（同步方法，适配ServiceBase）
+        /// </summary>
+        public WebResponseContent UploadFiles(List<IFormFile> files, string folder = null)
+        {
+            if (files == null || !files.Any())
+            {
+                return new WebResponseContent().Error("请选择要上传的文件");
+            }
+
+            var response = new WebResponseContent(true);
+            var uploadResults = new List<object>();
+
+            try
+            {
+                // 确保存储bucket存在
+                var bucketExistsArgs = new BucketExistsArgs().WithBucket(_minioConfig.BucketName);
+                bool bucketExists = Task.Run(async () => await _minioClient.BucketExistsAsync(bucketExistsArgs)).Result;
+
+                if (!bucketExists)
+                {
+                    var makeBucketArgs = new MakeBucketArgs().WithBucket(_minioConfig.BucketName);
+                    Task.Run(async () => await _minioClient.MakeBucketAsync(makeBucketArgs)).Wait();
+
+                }
+
+
+                foreach (var file in files)
+                {
+                    if (file == null || file.Length == 0)
+                    {
+                        continue; // 跳过空文件
+                    }
+
+                    // 构建对象名称
+                    string objectName = !string.IsNullOrEmpty(folder)
+                        ? $"{folder}/{DateTime.Now:yyyyMMdd}/{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}_{file.FileName}"
+                        : $"{DateTime.Now:yyyyMMdd}/{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}_{file.FileName}";
+
+                    // 上传文件
+                    using (var stream = file.OpenReadStream())
+                    {
+                        var putObjectArgs = new PutObjectArgs()
+                            .WithBucket(_minioConfig.BucketName)
+                            .WithObject(objectName)
+                            .WithStreamData(stream)
+                            .WithObjectSize(file.Length)
+                            .WithContentType(file.ContentType);
+
+                        Task.Run(async () => await _minioClient.PutObjectAsync(putObjectArgs)).Wait();
+
+                    }
+
+                    // 计算文件哈希
+                    string fileHash = CalculateFileHash(file);
+
+                    uploadResults.Add(new
+                    {
+                        FileName = file.FileName,
+                        FileSize = file.Length,
+                        ContentType = file.ContentType,
+                        MinioBucket = _minioConfig.BucketName,
+                        MinioObject = objectName,
+                        Hash = fileHash,
+                        Url = GetFileUrl(objectName)
+                    });
+                }
+
+                return response.OK("文件上传成功", uploadResults);
+            }
+            catch (Exception ex)
+            {
+                return response.Error($"文件上传失败：{ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// 计算文件哈希值
+        /// </summary>
+        private string CalculateFileHash(IFormFile file)
+        {
+            using (var stream = file.OpenReadStream())
+            using (var sha256 = SHA256.Create())
+            {
+                var hash = sha256.ComputeHash(stream);
+                return Convert.ToBase64String(hash);
+            }
+        }
         public async Task<bool> DeleteAsync(string filePath)
         {
             try

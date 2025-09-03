@@ -352,14 +352,76 @@ namespace VOL.Core.BaseProvider
             return gridData;
         }
 
-
-
         /// <summary>
-        /// 上传文件
+        /// 上传文件 - 根据配置自动选择存储方式
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
         public virtual WebResponseContent Upload(List<Microsoft.AspNetCore.Http.IFormFile> files)
+        {
+            if (files == null || files.Count == 0) return Response.Error("请上传文件");
+
+            try
+            {
+                // 获取文件存储服务
+                var fileStorageService = AutofacContainerModule.GetService<IFileStorageService>();
+
+                if (fileStorageService != null)
+                {
+                    // 使用文件存储服务进行上传
+                    string folderName = GetUploadFolder();
+                    var uploadResult = fileStorageService.UploadFiles(files, folderName);
+
+                    if (uploadResult.Status)
+                    {
+                        // 处理上传结果，将文件信息转换为路径格式
+                        var uploadData = uploadResult.Data as List<object>;
+                        if (uploadData != null && uploadData.Count > 0)
+                        {
+                            // 对于非DMS模块，只返回文件路径即可
+                            var firstFile = uploadData[0] as dynamic;
+                            string filePath = firstFile?.MinioObject?.ToString() ?? "";
+                            return Response.OK("文件上传成功", filePath);
+                        }
+                    }
+
+                    return uploadResult;
+                }
+                else
+                {
+                    // 如果没有注册文件存储服务，使用原来的本地存储逻辑
+                    return UploadToLocal(files);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"上传文件失败：{typeof(T).GetEntityTableCnName()},{ex.Message + ex.StackTrace}");
+                return Response.Error("文件上传失败");
+            }
+        }
+
+        /// <summary>
+        /// 获取上传文件夹名称
+        /// </summary>
+        /// <returns></returns>
+        private string GetUploadFolder()
+        {
+            if (!string.IsNullOrEmpty(UploadFolder))
+            {
+                return UploadFolder.TrimEnd('/', '\\');
+            }
+            else
+            {
+                return $"Tables/{typeof(T).GetEntityTableName()}";
+            }
+        }
+
+        /// <summary>
+        /// 上传文件到本地
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public virtual WebResponseContent UploadToLocal(List<Microsoft.AspNetCore.Http.IFormFile> files)
         {
             if (files == null || files.Count == 0) return Response.Error("请上传文件");
 

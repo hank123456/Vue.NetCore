@@ -1,6 +1,6 @@
 <!--
  *Author：jxx
- *Contact：283591387@qq.com
+ *Contact：xx
  *业务请在@/extension/mes/mes/MES_ProductInbound.jsx或MES_ProductInbound.vue文件编写
  *新版本支持vue或【表.jsx]文件编写业务,文档见:https://v3.volcore.xyz/docs/view-grid、https://v3.volcore.xyz/docs/web
  -->

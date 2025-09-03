@@ -1,6 +1,6 @@
 /*****************************************************************************************
- **  Author:jxx 2022
- **  QQ:283591387
+ **  Author:xx
+ **  xx
  **完整文档见：http://v2.volcore.xyz/document/api 【代码生成页面ViewGrid】
  **常用示例见：http://v2.volcore.xyz/document/vueDev
  **后台操作见：http://v2.volcore.xyz/document/netCoreDev

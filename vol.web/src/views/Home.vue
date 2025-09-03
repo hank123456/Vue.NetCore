@@ -42,7 +42,7 @@
           </div>
           <div class="table" style="margin-top: ">
             <div class="title">
-              <div class="txt">部门支出记录</div>
+              <div class="txt">任务单记录</div>
               <div class="radio-group-table">
                 <el-radio-group v-model="radioValue2" size="small">
                   <el-radio-button value="本月" label="本月" />

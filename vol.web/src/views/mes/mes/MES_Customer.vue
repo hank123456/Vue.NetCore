@@ -1,7 +1,7 @@
 <!--
  *Author：jxx
  *Date：{Date}
- *Contact：283591387@qq.com
+ *Contact：xx
  *业务请在@/extension/mes/mes/MES_Customer.jsx或MES_Customer.vue文件编写
  *新版本支持vue或【表.jsx]文件编写业务,文档见:https://v3.volcore.xyz/docs/view-grid、https://v3.volcore.xyz/docs/web
  -->

@@ -1771,7 +1771,7 @@ DISTINCT
                     }
                     if (tableColumnInfo.ColumnType == "bool")
                     {
-                        column.ColumnType = "bit";
+                        column.ColumnType = "bool";
                     }
                 }
 

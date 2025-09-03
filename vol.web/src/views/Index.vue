@@ -41,7 +41,7 @@
               <Fold v-else />
             </el-icon>
           </el-button>
-          技术研发数字化管理平台</div>
+          技术研发中心</div>
         <div class="header-text">
          
           <div class="h-link" v-if="layout == 'top'">
@@ -219,13 +219,14 @@ const {
 const { navCloseTabs, open, close, selectNav, removeNav,navRefreshPage } = IndexTabs(proxy, dataConfig, router)
 
 navigation.push({ orderNo: '0', id: '1', name: '首页', path: '/home' })
-links.value.push(...[{
-  text: '物资管理系统',
-  path: 'http://10.140.0.0/',
-  id: -1,
-  icon: 'el-icon-coin',
-  left: true
-}])
+// 首页导航菜单超链接
+// links.value.push(...[{
+//   text: '物资管理系统',
+//   path: 'http://10.140.0.0/',
+//   id: -1,
+//   icon: 'el-icon-coin',
+//   left: true
+// }])
 
 const userDropItems = reactive([
   { text: '消息管理', icon: 'el-icon-bell', hidden: true },
