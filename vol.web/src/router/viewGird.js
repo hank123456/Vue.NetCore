@@ -232,7 +232,16 @@ let viewgird = [
         path: '/DMS_FileStorage',
         name: 'DMS_FileStorage',
         component: () => import('@/views/dms/dms/DMS_FileStorage.vue')
-    }]
+    }    ,{
+      path: '/DMS_FileStorageUser',
+      name: 'DMS_FileStorageUser',
+      component: () => import('@/views/dms/dms/DMS_FileStorageUser.vue'),
+      meta: {  
+        dynamic: true  
+      } 
+  }
+  
+  ]
 
 //上面的demo、MES开头的都是示例菜单，可以任意删除 
 export default viewgird

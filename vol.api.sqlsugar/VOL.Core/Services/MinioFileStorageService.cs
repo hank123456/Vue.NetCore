@@ -119,8 +119,8 @@ namespace VOL.Core.Services
 
                     // 构建对象名称
                     string objectName = !string.IsNullOrEmpty(folder)
-                        ? $"{folder}/{DateTime.Now:yyyyMMdd}/{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}_{file.FileName}"
-                        : $"{DateTime.Now:yyyyMMdd}/{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}_{file.FileName}";
+                        ? $"{folder}/{DateTime.Now:yyyyMMdd}/{file.FileName}"
+                        : $"{DateTime.Now:yyyyMMdd}/{file.FileName}";
 
                     // 上传文件
                     using (var stream = file.OpenReadStream())
@@ -137,7 +137,7 @@ namespace VOL.Core.Services
                     }
 
                     // 计算文件哈希
-                    string fileHash = CalculateFileHash(file);
+                    string fileHash = FileHashHelper.CalculateFileHash(file);
 
                     uploadResults.Add(new
                     {
@@ -159,18 +159,6 @@ namespace VOL.Core.Services
             }
         }
 
-        /// <summary>
-        /// 计算文件哈希值
-        /// </summary>
-        private string CalculateFileHash(IFormFile file)
-        {
-            using (var stream = file.OpenReadStream())
-            using (var sha256 = SHA256.Create())
-            {
-                var hash = sha256.ComputeHash(stream);
-                return Convert.ToBase64String(hash);
-            }
-        }
         public async Task<bool> DeleteAsync(string filePath)
         {
             try
@@ -195,11 +183,22 @@ namespace VOL.Core.Services
 
             try
             {
-                // 生成预签名URL，有效期24小时
+                // 检查文件是否存在，不存在时抛出异常，返回空字符串
+                var statObjectArgs = new StatObjectArgs()
+                    .WithBucket(_minioConfig.BucketName)
+                    .WithObject(filePath);
+                _minioClient.StatObjectAsync(statObjectArgs).GetAwaiter().GetResult();
+
+
                 var args = new PresignedGetObjectArgs()
                     .WithBucket(_minioConfig.BucketName)
                     .WithObject(filePath)
-                    .WithExpiry(60 * 60 * 24); // 24小时
+                    .WithExpiry(60 * 60 * 1)
+                    .WithHeaders(new Dictionary<string, string>
+                    {
+                        // 添加这个强制浏览器下载文件，而不是打开
+                        ["response-content-disposition"] = "attachment"
+                    }); // 
 
                 return _minioClient.PresignedGetObjectAsync(args).GetAwaiter().GetResult();
             }
