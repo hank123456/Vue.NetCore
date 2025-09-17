@@ -27,7 +27,7 @@
         <img
           class="header-img"
           @click="showUpload"
-          :src="http.ipAddress + userInfo.headImageUrl"
+          :src="http.ipAddress + 'api/FileProxy/image/' + userInfo.headImageUrl"
         />
         <div class="text">
           <p class="name center">
@@ -139,14 +139,19 @@ const showUpload = () => {
 const handleChange = (e) => {
   var forms = new FormData();
   let file = e.target.files[0];
+  console.log(file);
   forms.append("fileInput", file, file.name);
+  console.log("forms= ",forms);
   const url = "api/sys_user/upload";
   proxy.http
     .post(url, forms, true, {
       headers: { "Content-Type": "multipart/form-data" },
     })
     .then((x) => {
-      userInfo.headImageUrl = x.data + file.name;
+      //console.log(x);
+      // userInfo.headImageUrl = x.data + file.name;
+      userInfo.headImageUrl = x.data;
+
       modifyInfo();
     });
 };
