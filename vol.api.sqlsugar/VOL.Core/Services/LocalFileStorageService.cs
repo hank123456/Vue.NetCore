@@ -144,7 +144,7 @@ namespace VOL.Core.Services
                         ContentType = file.ContentType,
                         MinioObject = relativePath, // 本地存储使用相对路径
                         Hash = fileHash,
-                        Url = GetFileUrl(relativePath)
+                        Url = GetFileDownloadUrl(relativePath)
                     });
                 }
 
@@ -187,7 +187,7 @@ namespace VOL.Core.Services
             }
         }
 
-        public string GetFileUrl(string filePath)
+        public string GetFileDownloadUrl(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
                 return string.Empty;
@@ -221,6 +221,17 @@ namespace VOL.Core.Services
             {
                 return Task.FromResult(false);
             }
+        }
+
+        public string GetFileUrl(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return string.Empty;
+
+            // 本地存储直接返回虚拟路径
+            return path.StartsWith(_fileStorageConfig.Local.VirtualPath)
+                ? path
+                : $"{_fileStorageConfig.Local.VirtualPath}/{path.TrimStart('/')}";
         }
     }
 }

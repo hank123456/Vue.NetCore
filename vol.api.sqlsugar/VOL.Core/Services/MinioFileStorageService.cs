@@ -147,7 +147,7 @@ namespace VOL.Core.Services
                         MinioBucket = _minioConfig.BucketName,
                         MinioObject = objectName,
                         Hash = fileHash,
-                        Url = GetFileUrl(objectName)
+                        Url = GetFileDownloadUrl(objectName)
                     });
                 }
 
@@ -176,7 +176,12 @@ namespace VOL.Core.Services
             }
         }
 
-        public string GetFileUrl(string filePath)
+        /// <summary>
+        /// 获取下载URL（带签名，1小时有效期）
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public string GetFileDownloadUrl(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
                 return string.Empty;
@@ -199,6 +204,32 @@ namespace VOL.Core.Services
                         // 添加这个强制浏览器下载文件，而不是打开
                         ["response-content-disposition"] = "attachment"
                     }); // 
+
+                return _minioClient.PresignedGetObjectAsync(args).GetAwaiter().GetResult();
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+
+        public string GetFileUrl(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+                return string.Empty;
+
+            try
+            {
+                // 检查文件是否存在
+                var statObjectArgs = new StatObjectArgs()
+                    .WithBucket(_minioConfig.BucketName)
+                    .WithObject(filePath);
+                _minioClient.StatObjectAsync(statObjectArgs).GetAwaiter().GetResult();
+
+                var args = new PresignedGetObjectArgs()
+                    .WithBucket(_minioConfig.BucketName)
+                    .WithObject(filePath)
+                    .WithExpiry(60 * 60 * 4); // 4小时有效期，适合头像显示
 
                 return _minioClient.PresignedGetObjectAsync(args).GetAwaiter().GetResult();
             }

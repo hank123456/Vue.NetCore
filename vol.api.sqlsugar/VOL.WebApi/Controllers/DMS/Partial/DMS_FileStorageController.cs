@@ -221,7 +221,7 @@ namespace VOL.DMS.Controllers
                 //}
 
                 // 返回下载URL
-                string downloadUrl = fileStorageService.GetFileUrl(@object);
+                string downloadUrl = fileStorageService.GetFileDownloadUrl(@object);
                 if (!string.IsNullOrEmpty(downloadUrl))
                 {
                     return Json(new

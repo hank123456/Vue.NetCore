@@ -39,7 +39,7 @@ namespace VOL.Core.Services
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <returns></returns>
-        string GetFileUrl(string filePath);
+        string GetFileDownloadUrl(string filePath);
 
         /// <summary>
         /// 检查文件是否存在
@@ -47,5 +47,6 @@ namespace VOL.Core.Services
         /// <param name="filePath">文件路径</param>
         /// <returns></returns>
         Task<bool> ExistsAsync(string filePath);
+        string GetFileUrl(string path);
     }
 }

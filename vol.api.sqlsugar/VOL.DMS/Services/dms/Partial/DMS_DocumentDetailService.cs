@@ -65,7 +65,7 @@ namespace VOL.DMS.Services
                 return new WebResponseContent().Error("文件不存在");
             }
 
-            var url = _fileStorageService.GetFileUrl(document.MinioObject);
+            var url = _fileStorageService.GetFileDownloadUrl(document.MinioObject);
             return new WebResponseContent().OK("获取成功", new { Url = url });
         }
   }
