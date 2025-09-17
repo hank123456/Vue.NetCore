@@ -6,7 +6,8 @@ export default function (proxy, dataConfig, router,onSelect) {
   if (_userInfo) {
     userInfo.name = _userInfo.userName
     if (_userInfo.img) {
-      userInfo.img = proxy.base.getImgSrc(_userInfo.img, proxy.http.ipAddress)
+      //userInfo.img = proxy.base.getImgSrc(_userInfo.img, proxy.http.ipAddress)
+      userInfo.img = proxy.http.ipAddress + 'api/FileProxy/image/' + _userInfo.img
     }
   }
 
