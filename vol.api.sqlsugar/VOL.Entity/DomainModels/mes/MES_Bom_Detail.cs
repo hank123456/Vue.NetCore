@@ -32,18 +32,19 @@ namespace VOL.Entity.DomainModels
        [SugarColumn(IsPrimaryKey = true)]
        [Key]
        [Display(Name ="DomDetailId")]
-       [MaxLength(1024)]
-       [Column(TypeName="string(1024)")]
+       [MaxLength(36)]
+       [Column(TypeName= "uniqueidentifier")]
        [Required(AllowEmptyStrings=false)]
-       public string DomDetailId { get; set; }
+       public Guid DomDetailId { get; set; }
 
        /// <summary>
        ///
        /// </summary>
        [Display(Name ="BomId")]
-       [MaxLength(1024)]
-       [Column(TypeName="string(1024)")]
-       public string BomId { get; set; }
+       [MaxLength(36)]
+       [Column(TypeName= "uniqueidentifier")]
+       [Editable(true)]
+        public Guid BomId { get; set; }
 
        /// <summary>
        ///
@@ -51,7 +52,8 @@ namespace VOL.Entity.DomainModels
        [Display(Name ="Sequence")]
        [Column(TypeName="int")]
        [Required(AllowEmptyStrings=false)]
-       public int Sequence { get; set; }
+        [Editable(true)]
+        public int Sequence { get; set; }
 
        /// <summary>
        ///
@@ -135,8 +137,8 @@ namespace VOL.Entity.DomainModels
        /// </summary>
        [Display(Name ="CreateDate")]
        [MaxLength(1024)]
-       [Column(TypeName="string (1024)")]
-       public string CreateDate { get; set; }
+       [Column(TypeName= "datetime")]
+       public DateTime? CreateDate { get; set; }
 
        /// <summary>
        ///
@@ -158,8 +160,8 @@ namespace VOL.Entity.DomainModels
        /// </summary>
        [Display(Name ="ModifyDate")]
        [MaxLength(1024)]
-       [Column(TypeName="string (1024)")]
-       public string ModifyDate { get; set; }
+       [Column(TypeName= "datetime")]
+       public DateTime? ModifyDate { get; set; }
 
        
     }

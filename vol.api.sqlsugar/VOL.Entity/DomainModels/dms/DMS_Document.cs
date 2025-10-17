@@ -14,57 +14,129 @@ using VOL.Entity.SystemModels;
 
 namespace VOL.Entity.DomainModels
 {
-    [Entity(TableCnName = "我的文件",TableName = "DMS_Document",DetailTable =  new Type[] { typeof(DMS_DocumentDetail)},DetailTableCnName = "文件详情")]
+    [Entity(TableCnName = "我的文档",TableName = "DMS_Document",DetailTable =  new Type[] { typeof(DMS_DocumentFile)},DetailTableCnName = "文档文件关联")]
     public partial class DMS_Document:BaseEntity
     {
         /// <summary>
-       ///文件id
+       ///文档id
        /// </summary>
        [SugarColumn(IsPrimaryKey = true)]
        [Key]
-       [Display(Name ="文件id")]
+       [Display(Name ="文档id")]
        [Column(TypeName="uniqueidentifier")]
        [Editable(true)]
        [Required(AllowEmptyStrings=false)]
-       public Guid DocId { get; set; }
+       public Guid DocumentId { get; set; }
 
        /// <summary>
-       ///产品代码
+       ///文档类型
        /// </summary>
-       [Display(Name ="产品代码")]
-       [MaxLength(100)]
-       [Column(TypeName="string(100)")]
-       [Editable(true)]
-       [Required(AllowEmptyStrings=false)]
-       public string ProductCode { get; set; }
-
-       /// <summary>
-       ///文件类型
-       /// </summary>
-       [Display(Name ="文件类型")]
-       [MaxLength(20)]
-       [Column(TypeName="string(20)")]
+       [Display(Name ="文档类型")]
+       [MaxLength(50)]
+       [Column(TypeName="string(50)")]
        [Editable(true)]
        [Required(AllowEmptyStrings=false)]
        public string DocType { get; set; }
 
        /// <summary>
-       ///文件名
+       ///文档编码
        /// </summary>
-       [Display(Name ="文件名")]
+       [Display(Name ="文档编码")]
+       [MaxLength(100)]
+       [Column(TypeName="string(100)")]
+       [Editable(true)]
+       [Required(AllowEmptyStrings=false)]
+       public string DocCode { get; set; }
+
+       /// <summary>
+       ///文档名称
+       /// </summary>
+       [Display(Name ="文档名称")]
        [MaxLength(200)]
        [Column(TypeName="string(200)")]
        [Editable(true)]
        [Required(AllowEmptyStrings=false)]
-       public string Name { get; set; }
+       public string DocName { get; set; }
 
        /// <summary>
-       ///最新版本id
+       ///版本
        /// </summary>
-       [Display(Name ="最新版本id")]
-       [Column(TypeName="uniqueidentifier")]
+       [Display(Name ="版本")]
+       [MaxLength(20)]
+       [Column(TypeName="string(20)")]
        [Editable(true)]
-       public Guid? LastVersionId { get; set; }
+       [Required(AllowEmptyStrings=false)]
+       public string Version { get; set; }
+
+       /// <summary>
+       ///状态
+       /// </summary>
+       [Display(Name ="状态")]
+       [MaxLength(20)]
+       [Column(TypeName="string(20)")]
+       [Editable(true)]
+       [Required(AllowEmptyStrings=false)]
+       public string Status { get; set; }
+
+       /// <summary>
+       ///文档说明
+       /// </summary>
+       [Display(Name ="文档说明")]
+       [MaxLength(1024)]
+       [Column(TypeName="string(1024)")]
+       [Editable(true)]
+       public string Description { get; set; }
+
+       /// <summary>
+       ///是否可用
+       /// </summary>
+       [Display(Name ="是否可用")]
+       [Column(TypeName="short")]
+       [Editable(true)]
+       [Required(AllowEmptyStrings=false)]
+       public short Enable { get; set; }
+
+       /// <summary>
+       ///审核id
+       /// </summary>
+       [Display(Name ="审核id")]
+       [Column(TypeName="int")]
+       [Editable(true)]
+       public int? AuditId { get; set; }
+
+       /// <summary>
+       ///审核状态
+       /// </summary>
+       [Display(Name ="审核状态")]
+       [Column(TypeName="int")]
+       [Editable(true)]
+       public int? AuditStatus { get; set; }
+
+       /// <summary>
+       ///审核人
+       /// </summary>
+       [Display(Name ="审核人")]
+       [MaxLength(200)]
+       [Column(TypeName="string(200)")]
+       [Editable(true)]
+       public string Auditor { get; set; }
+
+       /// <summary>
+       ///审核时间
+       /// </summary>
+       [Display(Name ="审核时间")]
+       [Column(TypeName="DateTime")]
+       [Editable(true)]
+       public DateTime? AuditDate { get; set; }
+
+       /// <summary>
+       ///审核备注
+       /// </summary>
+       [Display(Name ="审核备注")]
+       [MaxLength(1024)]
+       [Column(TypeName="string(1024)")]
+       [Editable(true)]
+       public string AuditReason { get; set; }
 
        /// <summary>
        ///创建者id
@@ -84,11 +156,11 @@ namespace VOL.Entity.DomainModels
        public string Creator { get; set; }
 
        /// <summary>
-       ///创建日期
+       ///创建时间
        /// </summary>
-       [Display(Name ="创建日期")]
+       [Display(Name ="创建时间")]
        [MaxLength(1024)]
-       [Column(TypeName="datetime")]
+       [Column(TypeName= "datetime")]
        [Editable(true)]
        public DateTime CreateDate { get; set; }
 
@@ -114,23 +186,14 @@ namespace VOL.Entity.DomainModels
        /// </summary>
        [Display(Name ="修改时间")]
        [MaxLength(1024)]
-       [Column(TypeName="datetime")]
+       [Column(TypeName= "datetime")]
        [Editable(true)]
        public DateTime ModifyDate { get; set; }
 
-       /// <summary>
-       ///是否可用
-       /// </summary>
-       [Display(Name ="是否可用")]
-       [Column(TypeName="short")]
-       [Editable(true)]
-       [Required(AllowEmptyStrings=false)]
-       public short Enable { get; set; }
-
-       [Display(Name ="文件详情")]
-       [ForeignKey("DocId")]
-       [Navigate(NavigateType.OneToMany,nameof(DocId),nameof(DocId))]
-       public List<DMS_DocumentDetail> DMS_DocumentDetail { get; set; }
+       [Display(Name ="文档文件关联")]
+       [ForeignKey("DocumentId")]
+       [Navigate(NavigateType.OneToMany,nameof(DocumentId),nameof(DocumentId))]
+       public List<DMS_DocumentFile> DMS_DocumentFile { get; set; }
 
     }
 }

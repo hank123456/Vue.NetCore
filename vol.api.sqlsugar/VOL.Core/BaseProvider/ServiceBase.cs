@@ -378,10 +378,11 @@ namespace VOL.Core.BaseProvider
                         var uploadData = uploadResult.Data as List<object>;
                         if (uploadData != null && uploadData.Count > 0)
                         {
-                            // 对于非DMS模块，只返回文件路径即可
+                            
                             var firstFile = uploadData[0] as dynamic;
-                            string filePath = firstFile?.MinioObject?.ToString() ?? "";
-                            return Response.OK("文件上传成功", filePath);
+                            // 对于非DMS模块，只返回文件路径即可
+                            //string filePath = firstFile?.MinioObject?.ToString() ?? "";
+                            return Response.OK("文件上传成功", uploadData);
                         }
                     }
 

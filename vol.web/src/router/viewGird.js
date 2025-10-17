@@ -221,14 +221,6 @@ let viewgird = [
         name: 'TestService',
         component: () => import('@/views/mes/mes/TestService.vue')
     }    ,{
-        path: '/DMS_DocumentDetail',
-        name: 'DMS_DocumentDetail',
-        component: () => import('@/views/dms/dms/DMS_DocumentDetail.vue')
-    }    ,{
-        path: '/DMS_Document',
-        name: 'DMS_Document',
-        component: () => import('@/views/dms/dms/DMS_Document.vue')
-    }    ,{
         path: '/DMS_FileStorage',
         name: 'DMS_FileStorage',
         component: () => import('@/views/dms/dms/DMS_FileStorage.vue')
@@ -241,7 +233,35 @@ let viewgird = [
       } 
   }
   
-  ]
+      ,{
+        path: '/DMS_FileRecord',
+        name: 'DMS_FileRecord',
+        component: () => import('@/views/dms/dms/DMS_FileRecord.vue')
+    }    ,{
+        path: '/DMS_FileVersion',
+        name: 'DMS_FileVersion',
+        component: () => import('@/views/dms/dms/DMS_FileVersion.vue')
+    }    ,{
+        path: '/DMS_FileCatalog',
+        name: 'DMS_FileCatalog',
+        component: () => import('@/views/dms/dms/DMS_FileCatalog.vue')
+    }    ,{
+        path: '/DMS_FileApproved',
+        name: 'DMS_FileApproved',
+        component: () => import('@/views/dms/dms/DMS_FileApproved.vue')
+    }    ,{
+        path: '/DMS_File',
+        name: 'DMS_File',
+        component: () => import('@/views/dms/dms/DMS_File.vue')
+    }    ,{
+        path: '/DMS_Document',
+        name: 'DMS_Document',
+        component: () => import('@/views/dms/dms/DMS_Document.vue')
+    }    ,{
+        path: '/DMS_DocumentFile',
+        name: 'DMS_DocumentFile',
+        component: () => import('@/views/dms/dms/DMS_DocumentFile.vue')
+    }]
 
 //上面的demo、MES开头的都是示例菜单，可以任意删除 
 export default viewgird

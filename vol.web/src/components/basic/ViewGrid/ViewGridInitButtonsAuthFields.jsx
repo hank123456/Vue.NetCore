@@ -138,6 +138,14 @@ export const initButtonsAuthFields = (proxy, props, dataConfig, $route, hiddenFi
         }
       })
     }
+    // 【sx新增】主表格列也设置为只读,禁用快捷编辑  
+    if (props.columns) {  
+      props.columns.forEach((column) => {  
+        if (column.hasOwnProperty('edit')) {  
+          column.readonly = true  
+        }  
+      })  
+    }  
     //弹出框扩展按钮
     extendBtn(boxButtons, extend.buttons.box)
 

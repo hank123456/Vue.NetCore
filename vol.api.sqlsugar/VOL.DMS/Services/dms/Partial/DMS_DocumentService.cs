@@ -6,17 +6,18 @@
 *用户信息、权限、角色等使用UserContext.Current操作
 *DMS_DocumentService对增、删、改查、导入、导出、审核业务代码扩展参照ServiceFunFilter
 */
-using VOL.Core.BaseProvider;
-using VOL.Core.Extensions.AutofacManager;
-using VOL.Entity.DomainModels;
-using System.Linq;
-using VOL.Core.Utilities;
-using System.Linq.Expressions;
-using VOL.Core.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
+using System.Linq;
+using System.Linq.Expressions;
+using VOL.Core.BaseProvider;
+using VOL.Core.DBManager;
+using VOL.Core.Extensions;
+using VOL.Core.Extensions.AutofacManager;
+using VOL.Core.Utilities;
 using VOL.DMS.IRepositories;
+using VOL.Entity.DomainModels;
 
 namespace VOL.DMS.Services
 {
@@ -37,5 +38,38 @@ namespace VOL.DMS.Services
             //多租户会用到这init代码，其他情况可以不用
             //base.Init(dbRepository);
         }
-  }
+
+        public override WebResponseContent Add(SaveModel saveDataModel)
+        {
+            AddOnExecute = (SaveModel model) =>
+            {
+                string prefix = model.MainData["DocType"]?.ToString();
+                string today = DateTime.Now.ToString("yyMMdd");
+
+                // 查询当天的最大DocCode
+                string maxCode = repository.FindAsIQueryable(x => x.DocType == prefix && x.DocCode.StartsWith($"{prefix}{today}"))
+                    .OrderByDescending(x => x.DocCode)
+                    .Select(x => x.DocCode)
+                    .FirstOrDefault();
+
+                string rule = $"{prefix}-{today}-";
+                if (string.IsNullOrEmpty(maxCode) || maxCode.Length < rule.Length + 4)
+                {
+                    rule += "0001";
+                }
+                else
+                {
+                    int lastNumber = int.Parse(maxCode.Substring(rule.Length, 4));
+                    rule += (lastNumber + 1).ToString("D4");
+                }
+
+                model.MainData["DocCode"] = rule;
+                return new WebResponseContent().OK();
+            };
+
+            return base.Add(saveDataModel);
+        }
+
+
+    }
 }

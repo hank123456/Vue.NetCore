@@ -47,7 +47,7 @@ export default function(){
                     table: 'MES_Bom_Detail',
                     columns: [{field:'DomDetailId',title:'ID',type:'string',width:110,hidden:true,readonly:true,require:true,align:'left'},
                        {field:'BomId',title:'BomId',type:'string',width:110,hidden:true,align:'left'},
-                       {field:'Sequence',title:'序号',type:'int',width:70,require:true,align:'left'},
+                       {field:'Sequence',title:'序号',type:'int',width:70,require:true,align:'left',edit:{type:'number'}},
                        {field:'MaterialCode',title:'子件物料编码',type:'string',width:130,edit:{type:''},align:'left'},
                        {field:'MaterialName',title:'子件物料名称',type:'string',width:130,edit:{type:''},align:'left'},
                        {field:'Spec',title:'规格型号',type:'string',width:80,edit:{type:''},align:'left'},

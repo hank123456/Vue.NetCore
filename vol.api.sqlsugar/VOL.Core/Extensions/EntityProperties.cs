@@ -1404,6 +1404,7 @@ namespace VOL.Core.Extensions
 
                 if (filed == defaultColumns.DateField?.ToLower())
                     property.SetValue(source, DateTime.Now);
+
             }
             return source;
         }
