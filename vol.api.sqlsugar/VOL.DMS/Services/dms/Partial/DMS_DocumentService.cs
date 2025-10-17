@@ -6,15 +6,20 @@
 *用户信息、权限、角色等使用UserContext.Current操作
 *DMS_DocumentService对增、删、改查、导入、导出、审核业务代码扩展参照ServiceFunFilter
 */
+using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using VOL.Core.BaseProvider;
 using VOL.Core.DBManager;
+using VOL.Core.Enums;
 using VOL.Core.Extensions;
 using VOL.Core.Extensions.AutofacManager;
+using VOL.Core.ManageUser;
 using VOL.Core.Utilities;
 using VOL.DMS.IRepositories;
 using VOL.Entity.DomainModels;
@@ -45,31 +50,70 @@ namespace VOL.DMS.Services
             {
                 string prefix = model.MainData["DocType"]?.ToString();
                 string today = DateTime.Now.ToString("yyMMdd");
-
+                string rulePrefix = $"{prefix}-{today}-";
                 // 查询当天的最大DocCode
-                string maxCode = repository.FindAsIQueryable(x => x.DocType == prefix && x.DocCode.StartsWith($"{prefix}{today}"))
+                string maxCode = repository.FindAsIQueryable(x => x.DocType == prefix && x.DocCode.StartsWith(rulePrefix))
                     .OrderByDescending(x => x.DocCode)
                     .Select(x => x.DocCode)
                     .FirstOrDefault();
 
-                string rule = $"{prefix}-{today}-";
-                if (string.IsNullOrEmpty(maxCode) || maxCode.Length < rule.Length + 4)
+                string newCode= string.Empty;
+                if (string.IsNullOrEmpty(maxCode))
                 {
-                    rule += "0001";
+                    newCode= rulePrefix + "0001";
                 }
                 else
                 {
-                    int lastNumber = int.Parse(maxCode.Substring(rule.Length, 4));
-                    rule += (lastNumber + 1).ToString("D4");
+                    int lastNumber = int.Parse(maxCode.Substring(maxCode.Length - 4));
+                    newCode = rulePrefix + (lastNumber + 1).ToString("D4");
                 }
 
-                model.MainData["DocCode"] = rule;
+                model.MainData["DocCode"] = newCode;
                 return new WebResponseContent().OK();
             };
 
             return base.Add(saveDataModel);
         }
 
+        public override WebResponseContent Update(SaveModel saveDataModel)
+        {
+            // 获取主键  
+            PropertyInfo keyProperty = typeof(DMS_Document).GetKeyProperty();
+            string keyName = keyProperty.Name;
+
+            if (!saveDataModel.MainData.ContainsKey(keyName))
+            {
+                return new WebResponseContent().Error("缺少主键");
+            }
+
+            object keyValue = saveDataModel.MainData[keyName];
+
+            // 非超级管理员需要验证权限  
+            if (!UserContext.Current.IsSuperAdmin)
+            {
+                // 使用CreateExpression构建动态表达式  
+                Expression<Func<DMS_Document, bool>> expression =
+                    keyName.CreateExpression<DMS_Document>(keyValue.ToString(), LinqExpressionType.Equal);
+
+                var entity = repository.FindFirst(expression);
+
+                if (entity == null)
+                {
+                    return new WebResponseContent().Error("数据不存在");
+                }
+
+                // 使用CreateID判断
+                int createId = entity.CreateID.GetInt();
+                int currentUserId = UserContext.Current.UserId;
+
+                if (createId != currentUserId)
+                {
+                    return new WebResponseContent().Error("您没有权限编辑此数据");
+                }
+            }
+
+            return base.Update(saveDataModel);
+        }
 
     }
 }

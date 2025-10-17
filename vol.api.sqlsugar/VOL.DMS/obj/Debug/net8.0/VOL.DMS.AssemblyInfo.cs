@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VOL.DMS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+035593a3b08a3731f80cbcbb1aa428df7241da6b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+db08592eb887d343e8070adca02f56a109960f37")]
 [assembly: System.Reflection.AssemblyProductAttribute("VOL.DMS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VOL.DMS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

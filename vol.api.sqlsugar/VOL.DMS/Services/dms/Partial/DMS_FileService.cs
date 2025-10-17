@@ -43,17 +43,17 @@ namespace VOL.DMS.Services
         }
         public override PageGridData<DMS_File> GetPageData(PageDataOptions pageData)
         {
-            QueryRelativeExpression = (ISugarQueryable<DMS_File> queryable) =>
-            {
-                // 超级管理员返回所有数据  
-                if (UserContext.Current.IsSuperAdmin)
-                {
-                    return queryable;
-                }
+            //QueryRelativeExpression = (ISugarQueryable<DMS_File> queryable) =>
+            //{
+            //    // 超级管理员返回所有数据  
+            //    if (UserContext.Current.IsSuperAdmin)
+            //    {
+            //        return queryable;
+            //    }
 
-                // 普通用户只返回自己创建的数据  
-                return queryable.Where(x => x.CreateID == UserContext.Current.UserId);
-            };
+            //    // 普通用户只返回自己创建的数据  
+            //    return queryable.Where(x => x.CreateID == UserContext.Current.UserId);
+            //};
 
             return base.GetPageData(pageData);
         }
